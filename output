@@ -1,0 +1,514 @@
+{
+  "name": "resumatch_output_schema",
+  "strict": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "resumatch_output": {
+        "type": "object",
+        "description": "Top-level container for resume-to-job-match output",
+        "properties": {
+          "metadata": {
+            "type": "object",
+            "description": "File and candidate metadata",
+            "properties": {
+              "version": {
+                "type": "string",
+                "description": "Schema or output version"
+              },
+              "generated_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "ISO 8601 timestamp when output was generated"
+              },
+              "candidate_name": {
+                "type": "string",
+                "description": "Full name of the candidate"
+              },
+              "target_company": {
+                "type": "string",
+                "description": "Target company for application"
+              },
+              "target_role": {
+                "type": "string",
+                "description": "Target role/title"
+              },
+              "file_input": {
+                "type": "string",
+                "description": "Original resume filename"
+              },
+              "file_output": {
+                "type": "string",
+                "description": "Generated output filename"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "version",
+              "generated_at",
+              "candidate_name",
+              "target_company",
+              "target_role",
+              "file_input",
+              "file_output"
+            ]
+          },
+          "jd_analysis": {
+            "type": "object",
+            "description": "Parsed job description analysis and expectations",
+            "properties": {
+              "required_skills": {
+                "type": "array",
+                "description": "Skills explicitly required by the JD",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "preferred_skills": {
+                "type": "array",
+                "description": "Skills preferred by the JD",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "seniority_level": {
+                "type": "string",
+                "description": "Seniority level expected"
+              },
+              "experience_expected": {
+                "type": "string",
+                "description": "Experience range expected"
+              },
+              "seniority_signals": {
+                "type": "array",
+                "description": "Signals in JD that indicate seniority expectations",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "core_problem_solved": {
+                "type": "string",
+                "description": "Core business problem the role addresses"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "required_skills",
+              "preferred_skills",
+              "seniority_level",
+              "experience_expected",
+              "seniority_signals",
+              "core_problem_solved"
+            ]
+          },
+          "keyword_analysis": {
+            "type": "object",
+            "description": "Analysis of keyword matches, transferable language, and gaps",
+            "properties": {
+              "matched": {
+                "type": "array",
+                "description": "Keywords found on the resume with context and strength",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "keyword": {
+                      "type": "string",
+                      "description": "Keyword matched"
+                    },
+                    "found_in": {
+                      "type": "string",
+                      "description": "Location(s) in the resume where keyword was found"
+                    },
+                    "strength": {
+                      "type": "string",
+                      "description": "Strength of the match (e.g., strong, moderate)"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "keyword",
+                    "found_in",
+                    "strength"
+                  ]
+                }
+              },
+              "transferable": {
+                "type": "array",
+                "description": "Phrases or experiences reframed to align with JD keywords",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "keyword": {
+                      "type": "string",
+                      "description": "Target keyword or skill"
+                    },
+                    "original_language": {
+                      "type": "string",
+                      "description": "Original wording from resume"
+                    },
+                    "reframed_as": {
+                      "type": "string",
+                      "description": "Rewritten phrasing to match JD"
+                    },
+                    "confidence": {
+                      "type": "string",
+                      "description": "Confidence level for the reframing"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "keyword",
+                    "original_language",
+                    "reframed_as",
+                    "confidence"
+                  ]
+                }
+              },
+              "missing": {
+                "type": "array",
+                "description": "Keywords required or preferred by JD but missing or weak in resume",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "keyword": {
+                      "type": "string",
+                      "description": "Missing or weak keyword"
+                    },
+                    "importance": {
+                      "type": "string",
+                      "description": "Importance level (e.g., required, preferred)"
+                    },
+                    "bridgeable": {
+                      "type": "boolean",
+                      "description": "Whether the gap can be reasonably bridged"
+                    },
+                    "recommendation": {
+                      "type": "string",
+                      "description": "Suggested action or phrasing"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "keyword",
+                    "importance",
+                    "bridgeable",
+                    "recommendation"
+                  ]
+                }
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "matched",
+              "transferable",
+              "missing"
+            ]
+          },
+          "bullet_rewrites": {
+            "type": "array",
+            "description": "Rewritten/resphrased resume bullets grouped by role",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "description": "Role or title for which bullets were rewritten"
+                },
+                "company": {
+                  "type": "string",
+                  "description": "Company name for the role"
+                },
+                "period": {
+                  "type": "string",
+                  "description": "Employment period for the role"
+                },
+                "bullets": {
+                  "type": "array",
+                  "description": "List of rewritten bullets for the role",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Unique id for the bullet rewrite"
+                      },
+                      "before": {
+                        "type": "string",
+                        "description": "Original bullet text"
+                      },
+                      "after": {
+                        "type": "string",
+                        "description": "Rewritten bullet text"
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "Rewrite type (e.g., reframed, strengthened)"
+                      },
+                      "keywords_added": {
+                        "type": "array",
+                        "description": "Keywords added to the rewritten bullet",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "metric_added": {
+                        "type": "boolean",
+                        "description": "Whether a metric was added in the rewrite"
+                      },
+                      "candidate_review_required": {
+                        "type": "boolean",
+                        "description": "Whether the candidate must review the change"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "before",
+                      "after",
+                      "type",
+                      "keywords_added",
+                      "metric_added",
+                      "candidate_review_required"
+                    ]
+                  }
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "role",
+                "company",
+                "period",
+                "bullets"
+              ]
+            }
+          },
+          "summary": {
+            "type": "object",
+            "description": "Original and rewritten resume summary",
+            "properties": {
+              "before": {
+                "type": "string",
+                "description": "Original summary text"
+              },
+              "after": {
+                "type": "string",
+                "description": "Rewritten summary text"
+              },
+              "keywords_added": {
+                "type": "array",
+                "description": "Keywords inserted into the summary",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "before",
+              "after",
+              "keywords_added"
+            ]
+          },
+          "skills_section": {
+            "type": "object",
+            "description": "Original and updated skills list and ordering rationale",
+            "properties": {
+              "before": {
+                "type": "array",
+                "description": "Original skills listed on resume",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "after": {
+                "type": "array",
+                "description": "Updated skills section for resume",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "reordered": {
+                "type": "boolean",
+                "description": "Whether skills were reordered to front-load JD keywords"
+              },
+              "reason": {
+                "type": "string",
+                "description": "Reason for reordering or changes"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "before",
+              "after",
+              "reordered",
+              "reason"
+            ]
+          },
+          "ats_fit_score": {
+            "type": "object",
+            "description": "ATS fit scoring and breakdown",
+            "properties": {
+              "overall": {
+                "type": "integer",
+                "description": "Overall ATS fit score (0-100)"
+              },
+              "breakdown": {
+                "type": "object",
+                "description": "Detailed component scores",
+                "properties": {
+                  "keyword_match": {
+                    "type": "integer",
+                    "description": "Keyword match score"
+                  },
+                  "skills_coverage": {
+                    "type": "integer",
+                    "description": "Skills coverage score"
+                  },
+                  "title_alignment": {
+                    "type": "integer",
+                    "description": "Job title alignment score"
+                  },
+                  "seniority_match": {
+                    "type": "integer",
+                    "description": "Seniority match score"
+                  },
+                  "quantification_score": {
+                    "type": "integer",
+                    "description": "Score for quantified achievements"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "keyword_match",
+                  "skills_coverage",
+                  "title_alignment",
+                  "seniority_match",
+                  "quantification_score"
+                ]
+              },
+              "strengths": {
+                "type": "array",
+                "description": "Identified strengths contributing to the score",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "gaps": {
+                "type": "array",
+                "description": "Gaps identified that lower the score",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "verdict": {
+                "type": "string",
+                "description": "Overall recommendation or verdict"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "overall",
+              "breakdown",
+              "strengths",
+              "gaps",
+              "verdict"
+            ]
+          },
+          "version_log": {
+            "type": "object",
+            "description": "Versioning and change log information for this output",
+            "properties": {
+              "version_id": {
+                "type": "string",
+                "description": "Internal version identifier"
+              },
+              "date": {
+                "type": "string",
+                "format": "date",
+                "description": "Date of this version"
+              },
+              "ats_score": {
+                "type": "integer",
+                "description": "Recorded ATS score for this version"
+              },
+              "bullets_rewritten": {
+                "type": "integer",
+                "description": "Count of bullets rewritten"
+              },
+              "bullets_reframed": {
+                "type": "integer",
+                "description": "Count of bullets reframed"
+              },
+              "bullets_strengthened": {
+                "type": "integer",
+                "description": "Count of bullets strengthened"
+              },
+              "summary_replaced": {
+                "type": "boolean",
+                "description": "Whether the summary was replaced"
+              },
+              "skills_reordered": {
+                "type": "boolean",
+                "description": "Whether skills were reordered"
+              },
+              "gaps_flagged": {
+                "type": "integer",
+                "description": "Number of gaps flagged"
+              },
+              "candidate_review_required": {
+                "type": "boolean",
+                "description": "Whether candidate review is required for the output"
+              },
+              "review_items": {
+                "type": "array",
+                "description": "List of item IDs requiring candidate review",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "status": {
+                "type": "string",
+                "description": "Status of the output (e.g., ready_to_submit)"
+              },
+              "file_output": {
+                "type": "string",
+                "description": "Filename for the produced output file"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "version_id",
+              "date",
+              "ats_score",
+              "bullets_rewritten",
+              "bullets_reframed",
+              "bullets_strengthened",
+              "summary_replaced",
+              "skills_reordered",
+              "gaps_flagged",
+              "candidate_review_required",
+              "review_items",
+              "status",
+              "file_output"
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "metadata",
+          "jd_analysis",
+          "keyword_analysis",
+          "bullet_rewrites",
+          "summary",
+          "skills_section",
+          "ats_fit_score",
+          "version_log"
+        ]
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "resumatch_output"
+    ]
+  }
+}
